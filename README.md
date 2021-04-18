@@ -1,6 +1,7 @@
 # e-shop
 simple shop made by using node, express, react, redux and mongodb
-#Preview
+
+# Preview
 ![obraz](https://user-images.githubusercontent.com/47251508/115161685-5e767d80-a09f-11eb-81ee-f1651d225fd7.png)
 
 # running the application:
