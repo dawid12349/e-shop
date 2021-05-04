@@ -4,33 +4,29 @@ import { Table, Button } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
+import {FaTrash, FaTimes, FaEdit, FaCheck} from 'react-icons/fa'
 import { listUsers, deleteUser } from '../actions/userActions'
 
-const UserListScreen = ({ history }) => {
-  const dispatch = useDispatch()
+const UserListPage = ({ history }) => {
+  const dispatch = useDispatch();
 
-  const userList = useSelector((state) => state.userList)
-  const { loading, error, users } = userList
+  const userList = useSelector((state) => state.userList);
+  const { loading, error, users } = userList;
 
-  const userLogin = useSelector((state) => state.userLogin)
-  const { userInfo } = userLogin
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
 
-  const userDelete = useSelector((state) => state.userDelete)
-  const { success: successDelete } = userDelete
+  const userDelete = useSelector((state) => state.userDelete);
+  const { success: successDelete } = userDelete;
 
   useEffect(() => {
-    if (userInfo && userInfo.isAdmin) {
-      dispatch(listUsers())
-    } else {
-      history.push('/login')
-    }
+    if (userInfo && userInfo.isAdmin) 
+      dispatch(listUsers());
+    else 
+      history.push('/login');
   }, [dispatch, history, successDelete, userInfo])
 
-  const deleteHandler = (id) => {
-    if (window.confirm('Are you sure')) {
-      dispatch(deleteUser(id))
-    }
-  }
+  const deleteHandler = (id) => window.confirm('Confirm') && dispatch(deleteUser(id));
 
   return (
     <>
@@ -59,24 +55,18 @@ const UserListScreen = ({ history }) => {
                   <a href={`mailto:${user.email}`}>{user.email}</a>
                 </td>
                 <td>
-                  {user.isAdmin ? (
-                    <i className='fas fa-check' style={{ color: 'green' }}></i>
-                  ) : (
-                    <i className='fas fa-times' style={{ color: 'red' }}></i>
-                  )}
+                  {user.isAdmin ? <FaCheck color = 'greem'/> : <FaTimes colro ='red'/> }
                 </td>
                 <td>
                   <LinkContainer to={`/admin/user/${user._id}/edit`}>
                     <Button   variant='dark' className='btn-sm'>
-                      <i className='fas fa-edit'></i>
+                      <FaEdit/>
                     </Button>
                   </LinkContainer>
-                  <Button
-                     style = {{background: "#BF1363" }} 
-                    className='btn-sm'
+                  <Button style = {{background: "#BF1363" }} className='btn-sm'
                     onClick={() => deleteHandler(user._id)}
                   >
-                    <i className='fas fa-trash'></i>
+                    <FaTrash/>
                   </Button>
                 </td>
               </tr>
@@ -88,4 +78,4 @@ const UserListScreen = ({ history }) => {
   )
 }
 
-export default UserListScreen
+export default UserListPage

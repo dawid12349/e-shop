@@ -19,9 +19,9 @@ const getProducts = asyncHandler(async (req, res) => {
 const getProductById = asyncHandler(async (req, res) => {
   const product = await Product.findById(req.params.id)
 
-  if (product) {
+  if (product) 
     res.json(product)
-  } else {
+  else {
     res.status(404)
     throw new Error('Product not found')
   }
@@ -58,15 +58,7 @@ const createProduct = asyncHandler(async (req, res) => {
 })
 
 const updateProduct = asyncHandler(async (req, res) => {
-  const {
-    name,
-    price,
-    description,
-    image,
-    brand,
-    category,
-    countInStock,
-  } = req.body
+  const { name,  price,  description,  image, brand, category, countInStock} = req.body
 
   const product = await Product.findById(req.params.id)
 
@@ -93,9 +85,7 @@ const createProductReview = asyncHandler(async (req, res) => {
   const product = await Product.findById(req.params.id)
 
   if (product) {
-    const alreadyReviewed = product.reviews.find(
-      (r) => r.user.toString() === req.user._id.toString()
-    )
+    const alreadyReviewed = product.reviews.find(r => r.user.toString() === req.user._id.toString())
 
     if (alreadyReviewed) {
       res.status(400)
@@ -113,9 +103,7 @@ const createProductReview = asyncHandler(async (req, res) => {
 
     product.numReviews = product.reviews.length
 
-    product.rating =
-      product.reviews.reduce((acc, item) => item.rating + acc, 0) /
-      product.reviews.length
+    product.rating = product.reviews.reduce((acc, item) => item.rating + acc, 0) / product.reviews.length
 
     await product.save()
     res.status(201).json({ message: 'Review added' })

@@ -8,7 +8,7 @@ import Loader from '../components/Loader'
 import {listProductDetails,createProductReview} from '../actions/productActions'
 import { PRODUCT_CREATE_REVIEW_RESET } from '../events/productsEvents'
 
-const ProductScreen = ({ history, match }) => {
+const ProductPage = ({ history, match }) => {
   const [qty, setQty] = useState(1)
   const [rating, setRating] = useState(0)
   const [comment, setComment] = useState('')
@@ -41,12 +41,7 @@ const ProductScreen = ({ history, match }) => {
 
   const submitHandler = (e) => {
     e.preventDefault()
-    dispatch(
-      createProductReview(match.params.id, {
-        rating,
-        comment,
-      })
-    )
+    dispatch( createProductReview(match.params.id, { rating, comment}))
   }
 
   return (
@@ -107,17 +102,9 @@ const ProductScreen = ({ history, match }) => {
                       <Row>
                         <Col>Qty</Col>
                         <Col>
-                          <Form.Control
-                            as='select'
-                            value={qty}
-                            onChange={(e) => setQty(e.target.value)}
-                          >
+                          <Form.Control  as='select' value={qty} onChange={(e) => setQty(e.target.value)}>
                             {[...Array(product.countInStock).keys()].map(
-                              (x) => (
-                                <option key={x + 1} value={x + 1}>
-                                  {x + 1}
-                                </option>
-                              )
+                              x => ( <option key={x + 1} value={x + 1}> {x + 1} </option>)
                             )}
                           </Form.Control>
                         </Col>
@@ -168,10 +155,7 @@ const ProductScreen = ({ history, match }) => {
                     <Form onSubmit={submitHandler}>
                       <Form.Group controlId='rating'>
                         <Form.Label>Rating</Form.Label>
-                        <Form.Control
-                          as='select'
-                          value={rating}
-                          onChange={(e) => setRating(e.target.value)}
+                        <Form.Control as='select' value={rating}onChange={(e) => setRating(e.target.value)}
                         >
                           <option value=''>Select...</option>
                           <option value='1'>1 - Poor</option>
@@ -183,10 +167,7 @@ const ProductScreen = ({ history, match }) => {
                       </Form.Group>
                       <Form.Group controlId='comment'>
                         <Form.Label>Comment</Form.Label>
-                        <Form.Control
-                          as='textarea'
-                          row='3'
-                          value={comment}
+                        <Form.Control as='textarea' row='3' value={comment}
                           onChange={(e) => setComment(e.target.value)}
                         ></Form.Control>
                       </Form.Group>
@@ -200,7 +181,7 @@ const ProductScreen = ({ history, match }) => {
                     </Form>
                   ) : (
                     <Message>
-                      Please <Link to='/login'>sign in</Link> to write a review{' '}
+                      You Need To <Link to='/login'>sign in</Link> to write a review{' '}
                     </Message>
                   )}
                 </ListGroup.Item>
@@ -213,4 +194,4 @@ const ProductScreen = ({ history, match }) => {
   )
 }
 
-export default ProductScreen
+export default ProductPage

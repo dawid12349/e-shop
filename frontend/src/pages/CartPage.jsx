@@ -2,10 +2,11 @@ import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { Row, Col, ListGroup, Image, Form, Button, Card } from 'react-bootstrap'
+import {FaTrash} from 'react-icons/fa'
 import Message from '../components/Message'
 import { addToCart, removeFromCart } from '../actions/cartActions'
 
-const CartScreen = ({ match, location }) => {
+const CartPage = ({ match, location }) => {
   const productId = match.params.id
 
   const qty = location.search ? Number(location.search.split('=')[1]) : 1
@@ -17,19 +18,16 @@ const CartScreen = ({ match, location }) => {
 
 
   useEffect(() => {
-    if (productId) {
+    if(productId) 
       dispatch(addToCart(productId, qty))
-    }
   }, [dispatch, productId, qty])
 
-  const removeFromCartHandler = (id) => {
-    dispatch(removeFromCart(id))
-  }
-
+  const removeFromCartHandler = (id) => dispatch(removeFromCart(id))
+  
   return (
     <Row>
       <Col md={8}>
-        <h1>Shopping Cart</h1>
+        <h1>Your Shopping Cart</h1>
         {cartItems.length === 0 ? (
           <Message>
             Your cart is empty <Link to='/'>Go Back</Link>
@@ -47,30 +45,19 @@ const CartScreen = ({ match, location }) => {
                   </Col>
                   <Col md={2}>${item.price}</Col>
                   <Col md={2}>
-                    <Form.Control
-                      as='select'
-                      value={item.qty}
-                      onChange={(e) =>
-                        dispatch(
-                          addToCart(item.product, Number(e.target.value))
-                        )
-                      }
-                    >
+                    <Form.Control as='select' value={item.qty} onChange={(e) =>
+                        dispatch( addToCart(item.product, Number(e.target.value)))
+                      }>
                       {[...Array(item.countInStock).keys()].map((x) => (
-                        <option key={x + 1} value={x + 1}>
-                          {x + 1}
-                        </option>
+                        <option key={x + 1} value={x + 1}> {x + 1} </option>
                       ))}
                     </Form.Control>
                   </Col>
                   <Col md={2}>
-                    <Button
-                      style = {{background: "#BF1363" }} type='submit'
-                      type='button'
-                      variant='dark'
+                    <Button style = {{background: "#BF1363" }} type='submit' type='button' variant='dark'
                       onClick={() => removeFromCartHandler(item.product)}
                     >
-                      <i className='fas fa-trash'></i>
+                    <FaTrash/>
                     </Button>
                   </Col>
                 </Row>
@@ -83,14 +70,10 @@ const CartScreen = ({ match, location }) => {
         <Card>
           <ListGroup variant='flush'>
             <ListGroup.Item>
-              <h2>
-                Subtotal ({cartItems.reduce((acc, item) => acc + item.qty, 0)})
-                items
-              </h2>
-              $
+              <h2> Total: ({cartItems.reduce((acc, item) => acc + item.qty, 0)}) items </h2>
               {cartItems
                 .reduce((acc, item) => acc + item.qty * item.price, 0)
-                .toFixed(2)}
+                .toFixed(2)} $
             </ListGroup.Item>
           </ListGroup>
         </Card>
@@ -99,4 +82,4 @@ const CartScreen = ({ match, location }) => {
   )
 }
 
-export default CartScreen
+export default CartPage

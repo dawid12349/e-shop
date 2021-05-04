@@ -6,8 +6,8 @@ import Message from '../components/Message'
 import Loader from '../components/Loader'
 import { listProducts } from '../actions/productActions'
 
-const HomeScreen = ({ match }) => {
-  const keyword = match.params.keyword
+const HomePage = ({ match }) => {
+  const input = match.params.input
 
   const dispatch = useDispatch()
 
@@ -15,8 +15,8 @@ const HomeScreen = ({ match }) => {
   const { loading, error, products} = productList
 
   useEffect(() => {
-    dispatch(listProducts(keyword))
-  }, [dispatch, keyword])
+    dispatch(listProducts(input))
+  }, [dispatch, input])
 
   return (
     <>
@@ -40,4 +40,4 @@ const HomeScreen = ({ match }) => {
   )
 }
 
-export default HomeScreen
+export default HomePage

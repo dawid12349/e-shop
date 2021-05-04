@@ -2,22 +2,19 @@ import React, { useEffect } from 'react'
 import { LinkContainer } from 'react-router-bootstrap'
 import { Table, Button, Row, Col } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
+import {FaPlus, FaEdit, FaTrash} from 'react-icons/fa'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
-import {
-  listProducts,
-  deleteProduct,
-  createProduct,
-} from '../actions/productActions'
+import {listProducts, deleteProduct, createProduct} from '../actions/productActions'
 import { PRODUCT_CREATE_RESET } from '../events/productsEvents'
 
-const ProductListScreen = ({ history, match }) => {
+const ProductListPage = ({ history, match }) => {
   const dispatch = useDispatch()
   const productList = useSelector((state) => state.productList)
   const { loading, error, products } = productList
 
   const productDelete = useSelector((state) => state.productDelete)
-  const { loading: loadingDelete, error: errorDelete, success: successDelete,} = productDelete
+  const { loading: loadingDelete, error: errorDelete, success: successDelete} = productDelete
 
   const productCreate = useSelector((state) => state.productCreate)
   const { loading: loadingCreate, error: errorCreate, success: successCreate, product: createdProduct} = productCreate
@@ -26,35 +23,18 @@ const ProductListScreen = ({ history, match }) => {
   const { userInfo } = userLogin
 
   useEffect(() => {
-    dispatch({ type: PRODUCT_CREATE_RESET })
+    dispatch({ type: PRODUCT_CREATE_RESET });
+    if (!userInfo || !userInfo.isAdmin) 
+      history.push('/login');
+    if (successCreate) 
+      history.push(`/admin/product/${createdProduct._id}/edit`);
+    else 
+      dispatch(listProducts(''));
+  }, [ dispatch, history, userInfo, successDelete, successCreate, createdProduct])
 
-    if (!userInfo || !userInfo.isAdmin) {
-      history.push('/login')
-    }
-
-    if (successCreate) {
-      history.push(`/admin/product/${createdProduct._id}/edit`)
-    } else {
-      dispatch(listProducts(''))
-    }
-  }, [
-    dispatch,
-    history,
-    userInfo,
-    successDelete,
-    successCreate,
-    createdProduct,
-  ])
-
-  const deleteHandler = (id) => {
-    if (window.confirm('Are you sure')) {
-      dispatch(deleteProduct(id))
-    }
-  }
-
-  const createProductHandler = () => {
-    dispatch(createProduct())
-  }
+  const deleteHandler = (id) => window.confirm('Are you sure') && dispatch(deleteProduct(id));
+  const createProductHandler = () =>  dispatch(createProduct());
+  
 
   return (
     <>
@@ -64,7 +44,7 @@ const ProductListScreen = ({ history, match }) => {
         </Col>
         <Col className='text-right'>
           <Button style = {{background: "#BF1363" }}  variant = 'dark' className='my-3' onClick={createProductHandler}>
-            <i className='fas fa-plus'></i> Create Product
+            <FaPlus/> Create Product
           </Button>
         </Col>
       </Row>
@@ -100,15 +80,13 @@ const ProductListScreen = ({ history, match }) => {
                   <td>
                     <LinkContainer to={`/admin/product/${product._id}/edit`}>
                       <Button style = {{background: "#BF1363" }}  variant='dark' className='btn-sm'>
-                        <i className='fas fa-edit'></i>
+                        <FaEdit/>
                       </Button>
                     </LinkContainer>
-                    <Button
-                      style = {{background: "#BF1363" }} 
-                      className='btn-sm'
+                    <Button style = {{background: "#BF1363" }} className='btn-sm'
                       onClick={() => deleteHandler(product._id)}
                     >
-                      <i className='fas fa-trash'></i>
+                      <FaTrash/>
                     </Button>
                   </td>
                 </tr>
@@ -121,4 +99,4 @@ const ProductListScreen = ({ history, match }) => {
   )
 }
 
-export default ProductListScreen
+export default ProductListPage
